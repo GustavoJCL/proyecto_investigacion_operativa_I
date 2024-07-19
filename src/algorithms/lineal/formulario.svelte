@@ -1,16 +1,24 @@
 <script>
+    import Simplex from "./simplex.svelte";
+
     let numVariables = 2;
     let numRestricciones = 2;
-    let maxMin = 'Max';
     let metodoResolucion = 'Grafico';
-    
     let paso = 1;
-    const pasoDos = () => {
+
+    export let maxMin = 'Max';
+    export let objetivo = Array(numVariables).fill(null);
+    export let restricciones = Array(numRestricciones).fill(null).map(() => Array(numVariables + 2).fill(null));
+
+    function pasoDos() {
+        objetivo = Array(numVariables).fill(null);
+        restricciones = Array(numRestricciones).fill(null).map(() => Array(numVariables + 2).fill(null));
         paso = 2;
-    };
-    const solucion = () => {
+    }
+
+    function solucion() {
         paso = 3;
-    };
+    }
 
 </script>
 
@@ -51,11 +59,37 @@
                     <h2>Define la función objetivo y restricciones</h2>
                     <h3>Función Objetivo:</h3>
                     <div class="funcionObjetivo">
-                        <!-- Se actualiza dinámicamente -->
+                        {#each Array(numVariables) as _, i}
+                            <input 
+                                class="inputPasoDos" 
+                                type="number" 
+                                placeholder={`x${i + 1}`} 
+                                bind:value={objetivo[i]}>
+                        {/each}
                     </div>
                     <h3>Restricciones:</h3>
                     <div class="restricciones">
-                        <!-- Se actualiza dinámicamente -->
+                        {#each Array(numRestricciones) as _, i}
+                            <div class="restriccion">
+                                {#each Array(numVariables) as _, j}
+                                    <input 
+                                        class="inputPasoDos" 
+                                        type="number" 
+                                        placeholder={`x${j + 1}`} 
+                                        bind:value={restricciones[i][j]}>
+                                {/each}
+                                <select class="inputPasoDos" bind:value={restricciones[i][numVariables + 1]}>
+                                    <option value="<=">&le;</option>
+                                    <option value=">=">&ge;</option>
+                                    <option value="=">=</option>
+                                </select>
+                                <input 
+                                    class="inputPasoDos" 
+                                    type="number" 
+                                    placeholder="Valor" 
+                                    bind:value={restricciones[i][numVariables]}>
+                            </div>
+                        {/each}
                     </div>
                     <label for="metodoResolucion">Metodo Resolucion:
                         <select class="cuadrosInput" id="metodoResolucion" bind:value={metodoResolucion}>
@@ -75,9 +109,31 @@
 
         {#if paso === 3}
             <div id="paso3">
-
-            </div>
+                <!--
+                {#if metodoResolucion === 'Grafico'}
+                    <Grafico {maxMin} {objetivo} {restricciones}/>
+                {/if}
+                -->
+                {#if metodoResolucion === 'Simplex'}
+                    <Simplex {maxMin} {objetivo} {restricciones}/>
+                {/if}
+                
+                <!--
+                {#if metodoResolucion === 'Simplex Dual'}
+                    <SimplexDual {maxMin} {objetivo} {restricciones}/>
+                {/if}
+            
+                {#if metodoResolucion === 'Gran M'}
+                    <GranM {maxMin} {objetivo} {restricciones}/>
+                {/if}
+            
+                {#if metodoResolucion === 'Dos fases'}
+                    <DosFases {maxMin} {objetivo} {restricciones}/>
+                {/if}
+                -->
+            </div>        
         {/if}
+
     </div>
 </main>
 
@@ -88,18 +144,19 @@
     }
 
     .container-principal {
-        width: 65%;
+        width: 60%;
         margin: auto;
-        padding: 20px;
-        background-color: #f9f8f8;
+        padding: 30px 40px;
+        background-color: #f8f8f8;
         border-radius: 10px;
         box-shadow: 0 0 30px 0 black;
+        border: 3px solid #494949;
     }
 
     .seccion-titulo h1 {
         text-align: center;
         color: #2a2a2a;
-        margin-bottom: 20px;
+        margin-bottom: 30px;
     }
 
     fieldset {
@@ -112,6 +169,14 @@
         font-size: 1.2em;
         font-weight: bold;
         color: #2a2a2a;
+        font-weight: 100;
+    }
+
+    h2{
+        margin-top: 0;
+    }
+    h3 {
+        margin-bottom: 10px;
     }
 
     h2, h3 {
@@ -128,7 +193,18 @@
         padding: 10px;
         margin-top: 5px;
         border: 1px solid #afafaf;
-        border-radius: 2px;
+        border-radius: 8px;
+        background-color: #eaeaea;
+    }
+
+    .inputPasoDos {
+        width: 70px;
+        margin-right: 8px;
+        padding: 8px;
+        margin-top: 5px;
+        border: 1px solid #afafaf;
+        border-radius: 8px;
+        background-color: #eaeaea;
     }
 
     button {
