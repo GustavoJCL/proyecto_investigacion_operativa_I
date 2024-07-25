@@ -1,14 +1,15 @@
 <script>
     import Simplex from "./simplex.svelte";
+    import Binario from "./binario.svelte"
 
     let numVariables = 2;
     let numRestricciones = 2;
     let metodoResolucion = 'Grafico';
     let paso = 1;
 
-    export let maxMin = 'Max';
-    export let objetivo = Array(numVariables).fill(null);
-    export let restricciones = Array(numRestricciones).fill(null).map(() => Array(numVariables + 2).fill(null));
+    let maxMin = 'Max';
+    let objetivo = Array(numVariables).fill(null);
+    let restricciones = Array(numRestricciones).fill(null).map(() => Array(numVariables + 2).fill(null));
 
     function pasoDos() {
         objetivo = Array(numVariables).fill(null);
@@ -98,6 +99,7 @@
                             <option value="Simplex Dual">Simplex Dual</option>
                             <option value="Gran M">Gran M</option>
                             <option value="Dos fases">Dos fases</option>
+                            <option value="Binario">Binario</option>
                         </select>
                     </label>
                     <div class="temporal">
@@ -131,6 +133,10 @@
                     <DosFases {maxMin} {objetivo} {restricciones}/>
                 {/if}
                 -->
+
+                {#if metodoResolucion === 'Binario'}
+                    <Binario {maxMin} {objetivo} {restricciones}/>
+                {/if}
             </div>        
         {/if}
 
@@ -157,6 +163,7 @@
         text-align: center;
         color: #2a2a2a;
         margin-bottom: 30px;
+        font-size: 38px;
     }
 
     fieldset {

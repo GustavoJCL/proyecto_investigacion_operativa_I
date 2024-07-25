@@ -1,143 +1,293 @@
 <script>
+    //Extraido de formulario
     export let maxMin;
     export let objetivo;
     export let restricciones;
 
-    let NV = objetivo.length;
-    let NC = restricciones.length; 
+    //Tamaño de los arreglos
+    let numeroVariables = objetivo.length;
+    let numeroRestricciones = restricciones.length;
 
-    let TS = Array(NC + 2).fill(null).map(() => Array(NV + 2).fill(0));
-    let P1, P2, XERR, NOPTIMAL;
+    //Matriz principal
+    let matriz = [];
+    //Bandera que termina el algoritmo y numero iteraciones
+    let bandera = true;
+    let iterador = -1;
+    //Arreglos para identificar columna inicial
+    let modificaiones = [];
+    let arrayColumnaInicial = [];
 
-    main();
-
-    function main() {
-        inicializarTS(objetivo, restricciones, maxMin);
-        Simplex();
-        mostrarResultados();
-    }
-
-    function inicializarTS(objetivo, restricciones, maxMin) {
-        let R1 = (maxMin === 'Max') ? 1 : -1;
-
-        // Llenar la función objetivo en TS
-        for (let J = 1; J <= NV; J++) {
-            TS[1][J + 1] = objetivo[J - 1] * R1;
-        }
-        TS[1][1] = 0; // Lado derecho de la función objetivo (suponemos 0 para este caso)
-
-        // Llenar las restricciones en TS
-        for (let I = 1; I <= NC; I++) {
-            for (let J = 1; J <= NV; J++) {
-                TS[I + 1][J + 1] = restricciones[I - 1][J - 1] * -1;
-            }
-            TS[I + 1][1] = restricciones[I - 1][NV]; // Lado derecho de la restricción
-        }
-
-        // Añadir variables de holgura (si es necesario)
-        for (let I = 1; I <= NC; I++) {
-            TS[I + 1][NV + I + 1] = 1;
+    for (let i = 0; i <= numeroRestricciones; i++) {
+        matriz[i] = [];  
+        for (let j = 0; j <= numeroVariables+numeroRestricciones; j++) {
+            matriz[i][j] = 0; 
         }
     }
 
-    function Pivot() {
-        let RAP = Infinity;
-        let XMAX = 0;
+    hallarSimplex();
 
-        // Encuentra la columna pivote (la que tiene el máximo valor en la fila 1)
-        for (let J = 2; J <= NV + 1; J++) {
-            if (TS[1][J] > 0 && TS[1][J] > XMAX) {
-                XMAX = TS[1][J];
-                P2 = J;
+    function hallarSimplex(){
+        organizar();
+        do{
+            iterador++;
+            simplex();
+        }while(bandera == true);
+        crearColumnaInicial();
+        console.log(arrayColumnaInicial);
+        console.log(modificaiones);
+    }
+
+    function organizar (){
+        matriz[0][0] = 0;
+        for(let i=1; i <= numeroVariables + numeroRestricciones; i++){
+            if(i <= numeroVariables){
+                if(maxMin == "Max"){
+                    matriz[0][i] = -objetivo[i-1];
+                }
+                else{
+                    matriz[0][i] = objetivo[i-1];
+                }
             }
-        }
-
-        // Encuentra la fila pivote
-        for (let I = 2; I <= NC + 1; I++) {
-            if (TS[I][P2] >= 0) continue;
-            let V = Math.abs(TS[I][1] / TS[I][P2]);
-            if (V < RAP) {
-                RAP = V;
-                P1 = I;
+            else{
+                matriz[0][i] = 0;
             }
         }
 
-        // Intercambia las filas
-        let temp = TS[0][P2];
-        TS[0][P2] = TS[P1][0];
-        TS[P1][0] = temp;
+        for (let i=1; i<= numeroRestricciones; i++){
+            matriz[i][0] =  restricciones[i-1][numeroVariables];
+            for (let j=1; j<= numeroVariables + numeroRestricciones; j++){
+                if(j<= numeroVariables){
+                    matriz[i][j] = restricciones[i-1][j-1];
+                }
+                else{
+                    if (j - numeroVariables == i){
+                        matriz[i][j] = 1;
+                    }
+                    else{
+                        matriz[i][j] = 0;
+                    }
+                }
+            }
+        }
     }
 
-    function Formula() {
-        // Actualiza la matriz TS utilizando el pivote
-        for (let I = 1; I <= NC + 1; I++) {
-            if (I === P1) continue;
-            for (let J = 1; J <= NV + 1; J++) {
-                if (J === P2) continue;
-                TS[I][J] -= TS[P1][J] * TS[I][P2] / TS[P1][P2];
+    function simplex(){
+        let indiceEntrada = indiceValorMasNegativo(matriz[0]);
+        if(indiceEntrada == -1){
+            bandera = false;
+            return;
+        }
+        let arrayTemporal = [];
+
+        for (let i=1; i<=numeroRestricciones; i++){
+            if(matriz[i][indiceEntrada] <= 0){
+                arrayTemporal[i] = Infinity;
+            }
+            else{
+                arrayTemporal[i] = matriz[i][0]/matriz[i][indiceEntrada];
             }
         }
 
-        TS[P1][P2] = 1 / TS[P1][P2];
-        for (let J = 1; J <= NV + 1; J++) {
-            if (J === P2) continue;
-            TS[P1][J] *= Math.abs(TS[P1][P2]);
+        let indiceSalida = indiceValorMasNegativo(arrayTemporal);
+        if(indiceSalida == -1){
+            bandera = false;
+            return;
         }
 
-        for (let I = 1; I <= NC + 1; I++) {
-            if (I === P1) continue;
-            TS[I][P2] *= TS[P1][P2];
-        }
-    }
+        guardarIndices(indiceSalida, indiceEntrada);
 
-    function Optimize() {
-        XERR = 0;
-        NOPTIMAL = 0;
-
-        // Verifica si hay errores
-        for (let I = 2; I <= NC + 1; I++) {
-            if (TS[I][1] < 0) XERR = 1;
+        let interseccion = matriz[indiceSalida][indiceEntrada];
+        for (let i=0; i <= numeroVariables + numeroRestricciones; i++){
+            matriz[indiceSalida][i] = matriz[indiceSalida][i]/interseccion;
         }
 
-        // Verifica si el objetivo es óptimo
-        for (let J = 2; J <= NV + 1; J++) {
-            if (TS[1][J] > 0) NOPTIMAL = 1;
+        for (let i=0; i <= numeroRestricciones; i++){
+            if(i == indiceSalida){
+                continue;
+            }
+            let pivote = -matriz[i][indiceEntrada];
+            for (let j=0; j <= numeroVariables + numeroRestricciones; j++){
+                matriz[i][j] = matriz[i][j] + pivote*matriz[indiceSalida][j];
+            }
         }
     }
 
-    function Simplex() {
-        do {
-            console.log("Antes de Pivot:");
-            console.log(TS);
-            Pivot();
-            console.log("Después de Pivot:");
-            console.log(TS);
-            Formula();
-            console.log("Después de Formula:");
-            console.log(TS);
-            Optimize();
-        } while (NOPTIMAL === 1);
+    function indiceValorMasNegativo(array) {
+        let indiceMasNegativo = -1; 
+        let valorMasNegativo = Infinity; 
+
+        for (let i = 1; i <= array.length; i++) {
+            if (array[i] < valorMasNegativo) {
+                valorMasNegativo = array[i];
+                indiceMasNegativo = i;
+            }
+        }
+
+        if(valorMasNegativo == 0){
+            return -1;
+        }
+
+        return indiceMasNegativo;
     }
 
-    function mostrarResultados() {
-    if (XERR === 1) {
-        console.log("No hay solución.");
-        return;
+    function guardarIndices(indiceSalida, indiceEntrada){
+        modificaiones.push([indiceSalida, indiceEntrada]);
     }
 
-    console.log("Resultados:");
-    for (let J = 2; J <= NV + 1; J++) { // Imprimir solo variables de decisión
-        if (TS[0][J] !== undefined) {
-            console.log(`VARIABLE #${TS[0][J]}: ${TS[J][1]}`);
+    
+
+    function inicializarArrayColumnaInicial() {
+        arrayColumnaInicial[0] = "Z";
+        for (let i = 1; i <= numeroRestricciones; i++) {
+            arrayColumnaInicial[i] = "R";
         }
     }
-    console.log(`Función Económica: ${TS[1][1]}`);
-}
 
+    function crearColumnaInicial() {
+        inicializarArrayColumnaInicial();
+        for (let i = 1; i <= numeroRestricciones; i++) {
+            for (let j = 0; j < modificaiones.length; j++) {
+                if (modificaiones[j][0] == i){
+                    arrayColumnaInicial[i] = `x${modificaiones[j][1]}`;
+                    break;
+                }
+            }
+        }
+    }
 </script>
 
 <main>
+    <fieldset>
+        <legend>RESOLUCION</legend>
+        <div class="containerSimplex">
+            <div class="containerObjetivo">
+                <h3>Optimizar</h3>
+                <p class="objetivo">{maxMin} Z =</p>
+                {#each objetivo as elemento, i}
+                <p class="objetivo"> {elemento}x{i+1}</p>
+                {/each}
+            </div>
+            
+            <div class="containerCuadro">
+            <h3>Cuadro Final</h3>
+                <table>
+                    <tr>
+                        <th>-</th>
+                        <th>Sol</th>
+                        {#each objetivo as _, i}
+                            <th>x{i+1}</th>
+                        {/each}
+                        {#each restricciones as _, i}
+                            <th>s{i+1}</th>
+                        {/each}
+                    </tr>
+                    
+                    {#each matriz as array, i}
+                        <tr>
+                            <td>{arrayColumnaInicial[i]}</td>
+                            {#each array as valor}
+                                <td>{valor.toFixed(2)}</td>
+                            {/each}
+                        </tr>
+                    {/each}
+                </table>
+            </div>
+
+            <div class="containerActualizacion">
+            <h3>Actualizacion</h3>
+                {#each arrayColumnaInicial as elemento, i}
+                    {#if elemento == "Z"}
+                        <p>Funcion Objetivo = {matriz[0][0]}</p>
+                    {:else}
+                        {#if elemento != "R"}
+                            <p>{elemento} = {matriz[i][0]}</p>
+                        {/if}
+                    {/if}
+                {/each}
+            </div>
+        </div>
+    </fieldset>
 </main>
 
 <style>
+    * {
+        box-sizing: border-box;
+        font-family: 'Lucida Sans', sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+
+    fieldset {
+        border: 2px solid #afafaf;
+        padding: 20px;
+        border-radius: 10px;
+        margin: 20px;
+        background-color: #f9f9f9;
+    }
+
+    legend {
+        font-size: 1.2em;
+        font-weight: bold;
+        color: #2a2a2a;
+        padding: 0 10px;
+    }
+
+    h3 {
+        margin-top: 10px;
+        margin-bottom: 10px;
+        color: #2a2a2a;
+        font-size: 1.1em;
+        border-bottom: 1px solid #ccc;
+        padding-bottom: 5px;
+    }
+
+    .containerSimplex {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .containerObjetivo, .containerCuadro, .containerActualizacion {
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        background-color: #fff;
+    }
+
+    .objetivo {
+        display: inline-block;
+        margin: 0;
+        padding-right: 10px;
+        font-size: 1em;
+        color: #333;
+    }
+
+    .containerCuadro table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .containerCuadro th, .containerCuadro td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: center;
+        font-size: 0.9em;
+    }
+
+    .containerCuadro th {
+        background-color: #f2f2f2;
+        color: #333;
+    }
+
+    .containerCuadro td {
+        background-color: #fff;
+        color: #555;
+    }
+
+    .containerActualizacion p {
+        margin: 5px 0;
+        font-size: 0.9em;
+        color: #333;
+    }
+
 </style>
