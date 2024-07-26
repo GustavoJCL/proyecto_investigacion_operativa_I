@@ -1,6 +1,7 @@
 <script>
-    import Simplex from "./simplex.svelte";
-    import Binario from "./binario.svelte"
+    import Simplex from "./simplexPrimal.svelte";
+    import Binario from "./binario.svelte";
+    import SimplexDual from "./simplexDual.svelte";
 
     let numVariables = 2;
     let numRestricciones = 2;
@@ -97,8 +98,6 @@
                             <option value="Grafico">Grafico</option>
                             <option value="Simplex">Simplex</option>
                             <option value="Simplex Dual">Simplex Dual</option>
-                            <option value="Gran M">Gran M</option>
-                            <option value="Dos fases">Dos fases</option>
                             <option value="Binario">Binario</option>
                         </select>
                     </label>
@@ -111,29 +110,14 @@
 
         {#if paso === 3}
             <div id="paso3">
-                <!--
-                {#if metodoResolucion === 'Grafico'}
-                    <Grafico {maxMin} {objetivo} {restricciones}/>
-                {/if}
-                -->
                 {#if metodoResolucion === 'Simplex'}
                     <Simplex {maxMin} {objetivo} {restricciones}/>
                 {/if}
                 
-                <!--
                 {#if metodoResolucion === 'Simplex Dual'}
                     <SimplexDual {maxMin} {objetivo} {restricciones}/>
                 {/if}
-            
-                {#if metodoResolucion === 'Gran M'}
-                    <GranM {maxMin} {objetivo} {restricciones}/>
-                {/if}
-            
-                {#if metodoResolucion === 'Dos fases'}
-                    <DosFases {maxMin} {objetivo} {restricciones}/>
-                {/if}
-                -->
-
+                
                 {#if metodoResolucion === 'Binario'}
                     <Binario {maxMin} {objetivo} {restricciones}/>
                 {/if}

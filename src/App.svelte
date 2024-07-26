@@ -20,10 +20,12 @@
     {#if metodo === 'lineal'}
         <Lineal />
     {/if}
-
+    
+    <!--
     {#if metodo === 'transporte'}
 
     {/if}
+    -->
 </main>
 
 <style>
