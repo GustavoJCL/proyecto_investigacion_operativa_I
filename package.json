@@ -17,5 +17,9 @@
     "tslib": "^2.6.3",
     "typescript": "^5.2.2",
     "vite": "^5.3.4"
+  },
+  "dependencies": {
+    "chart.js": "^4.4.3",
+    "plotly.js-dist": "^2.34.0"
   }
 }

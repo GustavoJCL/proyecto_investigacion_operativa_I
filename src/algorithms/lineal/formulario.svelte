@@ -2,6 +2,7 @@
     import Simplex from "./simplexPrimal.svelte";
     import Binario from "./binario.svelte";
     import SimplexDual from "./simplexDual.svelte";
+    import Grafico from "./grafico.svelte";
 
     let numVariables = 2;
     let numRestricciones = 2;
@@ -110,6 +111,10 @@
 
         {#if paso === 3}
             <div id="paso3">
+                {#if metodoResolucion === 'Grafico'}
+                    <Grafico {maxMin} {objetivo} {restricciones}/>
+                {/if}
+
                 {#if metodoResolucion === 'Simplex'}
                     <Simplex {maxMin} {objetivo} {restricciones}/>
                 {/if}
