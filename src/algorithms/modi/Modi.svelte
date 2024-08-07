@@ -175,7 +175,7 @@
 </script>
 
 <div class="container mx-auto p-4">
-	<h1 class="text-2xl font-bold mb-4">MODI Method Solver</h1>
+	<h1 class="text-2xl font-bold mb-4">Metodo Modi</h1>
 
 	<div class="flex-col items-start gap-4">
 		<div>
