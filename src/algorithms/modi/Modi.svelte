@@ -255,11 +255,11 @@
 			</button>
 
 			{#if solutionSteps.length > 0}
-				<div>
-					{#each solutionSteps as step}
-						<p>{step}</p>
-					{/each}
-				</div>
+				<!-- <div> -->
+				<!-- 	{#each solutionSteps as step} -->
+				<!-- 		<p>{step}</p> -->
+				<!-- 	{/each} -->
+				<!-- </div> -->
 
 				<h3 class="text-lg font-medium mt-4">Solution Table</h3>
 				<table class="border border-gray-300">

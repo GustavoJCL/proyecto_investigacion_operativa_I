@@ -8,7 +8,7 @@
 	import "./app.css";
 	import Sidebar from "./Sidebar.svelte";
 	import HungarianMethod from "./algorithms/hungarian/HungarianMethod.svelte";
-  import Lineal from './algorithms/lineal/formulario.svelte';
+	import Lineal from "./algorithms/lineal/formulario.svelte";
 	import { algorithmOptions } from "./store";
 	import { OptionsAlgorithm } from "./utils/state";
 </script>
@@ -23,7 +23,8 @@
 		{:else if $algorithmOptions == OptionsAlgorithm.Hungarian}
 			<HungarianMethod />
 		{:else if $algorithmOptions == OptionsAlgorithm.Lineal}
-			
+			<Lineal />
 		{/if}
 	</div>
 </div>
+
