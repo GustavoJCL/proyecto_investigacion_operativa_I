@@ -1,9 +1,4 @@
 <script lang="ts">
-	import {
-		ResizableHandle,
-		ResizablePane,
-		ResizablePaneGroup,
-	} from "$lib/components/ui/resizable";
 	import Modi from "./algorithms/modi/Modi.svelte";
 	import "./app.css";
 	import Sidebar from "./Sidebar.svelte";
@@ -11,13 +6,14 @@
 	import Lineal from "./algorithms/lineal/formulario.svelte";
 	import { algorithmOptions } from "./store";
 	import { OptionsAlgorithm } from "./utils/state";
+	import Principal from "./Principal.svelte";
 </script>
 
-<div class="flex justify-start">
+<div class="flex justify-start w-full">
 	<Sidebar />
 	<div>
 		{#if $algorithmOptions == OptionsAlgorithm.Home}
-			Proyecto Final - Investigación Operativa I
+			<Principal />
 		{:else if $algorithmOptions == OptionsAlgorithm.Modi}
 			<Modi />
 		{:else if $algorithmOptions == OptionsAlgorithm.Hungarian}
