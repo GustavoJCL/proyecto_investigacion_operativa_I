@@ -8,6 +8,7 @@
 	import "./app.css";
 	import Sidebar from "./Sidebar.svelte";
 	import HungarianMethod from "./algorithms/hungarian/HungarianMethod.svelte";
+  import Lineal from './algorithms/lineal/formulario.svelte';
 	import { algorithmOptions } from "./store";
 	import { OptionsAlgorithm } from "./utils/state";
 </script>
@@ -26,12 +27,3 @@
 		{/if}
 	</div>
 </div>
-<!---->
-<!-- <ResizablePaneGroup direction="horizontal"> -->
-<!-- 	<ResizablePane> -->
-<!-- 		<VerticalNavbar /> -->
-<!-- 	</ResizablePane> -->
-<!-- 	<ResizableHandle /> -->
-<!-- 	<ResizablePane>based</ResizablePane> -->
-<!-- </ResizablePaneGroup> -->
-<!-- <script>import "./app.css";</script> -->
