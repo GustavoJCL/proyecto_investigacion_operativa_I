@@ -1,15 +1,18 @@
 <script lang="ts">
 	import {
 		IconAlignJustified,
+		IconCarCrane,
 		IconHome,
 		IconLayoutSidebarLeftCollapse,
 		IconLogout2,
+		IconManualGearbox,
 		IconTable,
+		IconTimeline,
 	} from "@tabler/icons-svelte";
 	import { algorithmOptions } from "./store";
 	import { OptionsAlgorithm } from "./utils/state";
 
-	let expanded = false;
+	let expanded = true;
 
 	const toggleExpanded = (_: any) => (expanded = !expanded);
 </script>
@@ -32,11 +35,23 @@
 		<div class="list-none p-5 m-0 flex-col justify-start space-y-3">
 			<button
 				on:click={() => {
-					$algorithmOptions = OptionsAlgorithm.Modi;
+					$algorithmOptions = OptionsAlgorithm.Home;
 				}}
 				class="w-52 flex justify-start transition duration-300 ease-in-out hover:scale-105"
 			>
 				<IconHome />
+				<span
+					class={`transition-opacity duration-200 ease-out ${expanded ? "opacity-100 visible" : "opacity-0 invisible"}`}
+					>Principal</span
+				>
+			</button>
+			<button
+				on:click={() => {
+					$algorithmOptions = OptionsAlgorithm.Modi;
+				}}
+				class="w-52 flex justify-start transition duration-300 ease-in-out hover:scale-105"
+			>
+				<IconCarCrane />
 				<span
 					class={`transition-opacity duration-200 ease-out ${expanded ? "opacity-100 visible" : "opacity-0 invisible"}`}
 					>Modi</span
@@ -48,10 +63,22 @@
 				}}
 				class="w-52 flex justify-start transition duration-300 ease-in-out hover:scale-105"
 			>
-				<IconTable />
+				<IconManualGearbox />
 				<span
 					class={`transition-opacity duration-200 ease-out ${expanded ? "opacity-100 visible" : "opacity-0 invisible"}`}
 					>Hungaro</span
+				>
+			</button>
+			<button
+				on:click={() => {
+					$algorithmOptions = OptionsAlgorithm.Lineal;
+				}}
+				class="w-52 flex justify-start transition duration-300 ease-in-out hover:scale-105"
+			>
+				<IconTimeline />
+				<span
+					class={`transition-opacity duration-200 ease-out ${expanded ? "opacity-100 visible" : "opacity-0 invisible"}`}
+					>Lineal</span
 				>
 			</button>
 		</div>

@@ -14,12 +14,18 @@ importers:
       bits-ui:
         specifier: ^0.21.12
         version: 0.21.12(svelte@4.2.18)
+      chart.js:
+        specifier: ^4.4.3
+        version: 4.4.3
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
       paneforge:
         specifier: ^0.0.5
         version: 0.0.5(svelte@4.2.18)
+      plotly.js-dist:
+        specifier: ^2.34.0
+        version: 2.34.0
       svelte-radix:
         specifier: ^1.1.0
         version: 1.1.0(svelte@4.2.18)
@@ -246,6 +252,9 @@ packages:
   '@jridgewell/trace-mapping@0.3.25':
     resolution: {integrity: sha512-vNk6aEwybGtawWmy/PzwnGDOjCkLWSD2wqvjGGAgOAwCGWySYXfYoxt00IJkTF+8Lb57DwOb3Aa0o9CApepiYQ==}
 
+  '@kurkle/color@0.3.2':
+    resolution: {integrity: sha512-fuscdXJ9G1qb7W8VdHi+IwRqij3lBkosAm4ydQtEmbY58OzHXqQhvlxqEkoz0yssNVn38bcpRWgA9PP+OGoisw==}
+
   '@melt-ui/svelte@0.76.2':
     resolution: {integrity: sha512-7SbOa11tXUS95T3fReL+dwDs5FyJtCEqrqG3inRziDws346SYLsxOQ6HmX+4BkIsQh1R8U3XNa+EMmdMt38lMA==}
     peerDependencies:
@@ -469,6 +478,10 @@ packages:
 
   caniuse-lite@1.0.30001642:
     resolution: {integrity: sha512-3XQ0DoRgLijXJErLSl+bLnJ+Et4KqV1PY6JJBGAFlsNsz31zeAIncyeZfLCabHK/jtSh+671RM9YMldxjUPZtA==}
+
+  chart.js@4.4.3:
+    resolution: {integrity: sha512-qK1gkGSRYcJzqrrzdR6a+I0vQ4/R+SoODXyAjscQ/4mzuNzySaMCd+hyVxitSY1+L2fjPD1Gbn+ibNqRmwQeLw==}
+    engines: {pnpm: '>=8'}
 
   chokidar@3.6.0:
     resolution: {integrity: sha512-7VT13fmjotKpGipCW9JEQAusEPE+Ei8nl6/g4FBAmIm0GOOLMua9NDDo/DWp0ZAxCr3cPq5ZpBqmPAQgDda2Pw==}
@@ -809,6 +822,9 @@ packages:
   pirates@4.0.6:
     resolution: {integrity: sha512-saLsH7WeYYPiD25LDuLRRY/i+6HaPYr6G1OUlN39otzkSTxKnubR9RTxS3/Kk50s1g2JTgFwWQDQyplC5/SHZg==}
     engines: {node: '>= 6'}
+
+  plotly.js-dist@2.34.0:
+    resolution: {integrity: sha512-FZR9QT60vtE1ocdSIfop+zDIJEoy1lejwOvAjTSy+AmE4GZ//rW1nnIXwCRv4o9ejfzWq++lQMu6FJf9G+NtFg==}
 
   postcss-import@15.1.0:
     resolution: {integrity: sha512-hpr+J05B2FVYUAXHeK1YyI267J/dDDhMU6B6civm8hSY1jYJnBXxzKDKDswzJmtLHryrjhnDjqqp/49t8FALew==}
@@ -1224,6 +1240,8 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.0
 
+  '@kurkle/color@0.3.2': {}
+
   '@melt-ui/svelte@0.76.2(svelte@4.2.18)':
     dependencies:
       '@floating-ui/core': 1.6.4
@@ -1418,6 +1436,10 @@ snapshots:
   camelcase-css@2.0.1: {}
 
   caniuse-lite@1.0.30001642: {}
+
+  chart.js@4.4.3:
+    dependencies:
+      '@kurkle/color': 0.3.2
 
   chokidar@3.6.0:
     dependencies:
@@ -1733,6 +1755,8 @@ snapshots:
   pify@2.3.0: {}
 
   pirates@4.0.6: {}
+
+  plotly.js-dist@2.34.0: {}
 
   postcss-import@15.1.0(postcss@8.4.39):
     dependencies:

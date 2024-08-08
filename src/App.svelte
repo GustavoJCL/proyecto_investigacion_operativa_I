@@ -15,12 +15,14 @@
 <div class="flex justify-start">
 	<Sidebar />
 	<div>
-		{#if $algorithmOptions == OptionsAlgorithm.Modi}
+		{#if $algorithmOptions == OptionsAlgorithm.Home}
+			Proyecto Final - Investigación Operativa I
+		{:else if $algorithmOptions == OptionsAlgorithm.Modi}
 			<Modi />
 		{:else if $algorithmOptions == OptionsAlgorithm.Hungarian}
 			<HungarianMethod />
-		{:else if $algorithmOptions == OptionsAlgorithm.Graps}
-			<!-- <Grap -->
+		{:else if $algorithmOptions == OptionsAlgorithm.Lineal}
+			
 		{/if}
 	</div>
 </div>

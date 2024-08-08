@@ -1,5 +1,6 @@
 export enum OptionsAlgorithm {
+  Home,
   Modi,
   Hungarian,
-  Graps,
+  Lineal,
 }
